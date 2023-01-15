@@ -16,6 +16,13 @@ Features
     7.Scrollview for detail screen
     8.SafeAreaView for notch and other system UI elements
     9.FlexDirection and JustifyContent for author and publishedAt
+    
+Requirements
+
+    React Native
+    Axios
+    Redux
+    Saga
 
 Installation
 
