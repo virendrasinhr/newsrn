@@ -1,0 +1,43 @@
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+const TaskList = ({ navigation, route }) => {
+  const filter = route?.params?.filter;
+  
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Task List</Text>
+      {filter && (
+        <Text style={styles.subtitle}>Filter: {filter}</Text>
+      )}
+      <Text style={styles.placeholder}>Task list implementation coming soon...</Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 16,
+  },
+  placeholder: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+  },
+});
+
+export default TaskList;
