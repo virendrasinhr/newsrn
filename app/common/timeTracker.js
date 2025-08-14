@@ -1,5 +1,6 @@
 import BackgroundTimer from 'react-native-background-timer';
 import moment from 'moment';
+import { AppState } from 'react-native';
 import storageService from './storage';
 import { TaskStatus, TimeEntry } from './types';
 import { notificationService } from './notifications';
@@ -9,6 +10,7 @@ class TimeTrackerService {
     this.activeTimers = new Map();
     this.timerInterval = null;
     this.listeners = new Set();
+    this.appState = AppState.currentState;
     this.init();
   }
 
@@ -30,6 +32,10 @@ class TimeTrackerService {
         // Update task with current time
         await this.updateTaskTimeSpent(taskId, elapsedTime);
       }
+
+      // Handle app state changes for background processing
+      this.handleAppStateChange = this.handleAppStateChange.bind(this);
+      AppState.addEventListener('change', this.handleAppStateChange);
 
       this.startTimerUpdates();
     } catch (error) {
@@ -212,6 +218,15 @@ class TimeTrackerService {
       return false;
     }
   }
+
+  // Handle app state changes
+  handleAppStateChange = (nextAppState) => {
+    if (this.appState.match(/inactive|background/) && nextAppState === 'active') {
+      // App has come to the foreground, update timers
+      this.updateActiveTimers();
+    }
+    this.appState = nextAppState;
+  };
 
   // Timer Updates
   startTimerUpdates() {
@@ -442,6 +457,9 @@ class TimeTrackerService {
 
     this.stopTimerUpdates();
     this.listeners.clear();
+    
+    // Remove app state listener
+    AppState.removeEventListener('change', this.handleAppStateChange);
   }
 
   // Utility Methods
